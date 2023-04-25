@@ -5,8 +5,8 @@ import kotlin.random.Random.Default.nextInt
 import java.security.MessageDigest
 
 class Node {
-    val HASH_LENGTH = 256
-    val NONCE_DEFAULT = 0L
+    private val HASH_LENGTH = 256
+    private val NONCE_DEFAULT = 0L
 
     private var genBlock = Block(
         index=0,
@@ -25,19 +25,6 @@ class Node {
     fun setLastBlock(block: Block) {
         lastBlock = block
         stepBlock = null
-    }
-
-    fun getGenBlock(): Block = genBlock
-
-    fun setGenBlock(index: Long, data: String, prev_hash: String, curr_hash: String, nonce: Long, act: Boolean) {
-        genBlock = Block(
-            index=index,
-            data=data,
-            prev_hash = prev_hash,
-            hash = curr_hash,
-            nonce = nonce,
-            actuality = act
-        )
     }
 
     fun tryToCreateBlock(): Block? {
