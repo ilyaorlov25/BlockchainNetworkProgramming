@@ -9,18 +9,16 @@ fun getNumberNode(port: Int): Int {
     return port % 1000
 }
 
-fun getGroupPorts(port: Int): List<Int> =
-    when (port) {
-        PORT_1 -> {
-            listOf(PORT_2, PORT_3)
-        }
-        PORT_2 -> {
-            listOf(PORT_1, PORT_3)
-        }
-        else -> {
-            listOf(PORT_1, PORT_2)
-        }
+fun getGroupPorts(port: Int): List<Int> {
+    return if (port == PORT_1) {
+        listOf(PORT_2, PORT_3)
+    } else if (port == PORT_2) {
+        listOf(PORT_1, PORT_3)
     }
+    else {
+        listOf(PORT_1, PORT_2)
+    }
+}
 
 fun checkHighLevelOfProcess(process: Process):Boolean {
     return process.nodeNumber == getNumberNode(PORT_1)

@@ -9,11 +9,13 @@ import processes.checkHighLevelOfProcess
 
 object Controller {
     const val INTERVAL = 50
+    fun isBlockReceived(block: Block?): Boolean {
+        return block != null && !block.actuality
+    }
 
-    fun isBlockReceived(block: Block?): Boolean = (block != null) && !block.actuality
-
-    fun isBlockReceivedActual(block: Block?, process: Process): Boolean =
-        block != null && !checkHighLevelOfProcess(process)
+    fun isBlockReceivedActual(block: Block?, process: Process): Boolean {
+        return block != null && !checkHighLevelOfProcess(process)
+    }
 
     fun isBlockBroadcastActual(node: Node, process: Process): Boolean {
         return BlockGSON.lastActualIndex != node.getLastBlock().index

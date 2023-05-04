@@ -29,7 +29,6 @@ open class Process(val name: String, val nodeNumber: Int, val port: Int) {
                 try {
                     Thread.sleep(1000)
 
-                    // make connection client with server
                     clientSocket = serverSocket.accept()
                     listOfClientSockets.add(clientSocket)
 

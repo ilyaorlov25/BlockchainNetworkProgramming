@@ -10,9 +10,9 @@ class Node {
 
     private var genBlock = Block(
         index=0,
-        data="text",
-        prev_hash="preioushash",
-        hash="982d9e3eb996f559e633f4d194def3761d909f5a3b647d1a851fead67c32c9d1",
+        data="asba",
+        prev_hash="last",
+        hash="09a4b2272c88fa4fe0b6742f030f516430c16c672799162f1b425471ecdb996c",
         nonce=NONCE_DEFAULT,
         actuality=false
     )
@@ -20,12 +20,22 @@ class Node {
     private var lastBlock: Block = genBlock
     var stepBlock: Block? = null
 
-    fun getLastBlock(): Block = lastBlock
-
-    fun setLastBlock(block: Block) {
-        lastBlock = block
-        stepBlock = null
+    fun getGenBlock(): Block {
+        return genBlock
     }
+
+    fun setGenBlock(index:Long, data: String, prevHash: String, curHash: String, nonce: Long, isAct: Boolean) {
+        genBlock = Block(
+            index=index,
+            data=data,
+            prev_hash =prevHash,
+            hash=curHash,
+            nonce=nonce,
+            actuality=isAct
+        )
+    }
+
+    fun getLastBlock(): Block { return lastBlock }
 
     fun tryToCreateBlock(): Block? {
         lateinit var currentHash: String
@@ -36,11 +46,11 @@ class Node {
             val nonce = NONCE_DEFAULT
             currentHash = getHashBlock(ind=index, lastHash=previousHash, data=data, nonce=nonce)
             stepBlock = Block(
-                index=index,
-                data=data,
-                prev_hash=previousHash,
+                index=lastBlock.index + 1,
+                data=getBlockData(),
+                prev_hash = lastBlock.hash,
                 hash=currentHash,
-                nonce=nonce
+                nonce=NONCE_DEFAULT
             )
         } else {
             stepBlock?.let {
@@ -57,13 +67,22 @@ class Node {
         }
     }
 
-    fun isBlockValid(block: Block): Boolean =
-        block.hash.validateHash() && block.index == lastBlock.index + 1
+    fun setLastBlock(block: Block) {
+        lastBlock = block
+        stepBlock = null
+    }
 
-    private fun getHashBlock(ind: Long, lastHash: String, data: String, nonce: Long): String =
-        (ind.toString() + lastHash + data + nonce.toString()).toSHA()
+    fun isBlockValid(block: Block): Boolean {
+        return block.hash.validateHash() && block.index == lastBlock.index + 1
+    }
 
-    private fun getBlockData(): String = generateRandomData()
+    protected fun getHashBlock(ind: Long, lastHash: String, data: String, nonce: Long): String {
+        return (ind.toString() + lastHash + data + nonce.toString()).toSHA()
+    }
+
+    protected fun getBlockData(): String {
+        return generateRandomData()
+    }
 
     private fun generateRandomData() : String {
         val symbols: List<Char> = ('A'.. 'Z') + ('a'.. 'z') + ('0'..'9')
@@ -75,12 +94,16 @@ class Node {
         return sb.toString()
     }
 
-    private fun String.validateHash(): Boolean = this.takeLast(4) == "0000"
+    private fun String.validateHash(): Boolean {
+        return this.takeLast(4) == "0000"
+    }
 
     private fun String.toSHA(): String {
         val bytes: ByteArray = MessageDigest.getInstance("SHA-256").digest(this.toByteArray())
         return bytes.toHex()
     }
 
-    private fun ByteArray.toHex(): String = joinToString("") {"02x".format(it)}
+    private fun ByteArray.toHex(): String {
+        return joinToString("") {"%02x".format(it)}
+    }
 }
