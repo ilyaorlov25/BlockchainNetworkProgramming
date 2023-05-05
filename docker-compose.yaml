@@ -4,17 +4,14 @@ services:
   node1:
     image: ilyaorlov25/blockchain_network_programming
     container_name: node1
-    network_mode: host
     command: "8001"
 
   node2:
     image: ilyaorlov25/blockchain_network_programming
     container_name: node2
-    network_mode: host
     command: "8002"
 
   node3:
     image: ilyaorlov25/blockchain_network_programming
     container_name: node3
-    network_mode: host
     command: "8003"
