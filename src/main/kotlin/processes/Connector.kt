@@ -10,7 +10,7 @@ object Connector {
         for (port in getGroupPorts(this.port)) {
             try {
                 val groupSocket = this.groupSockets.getOrPut(port) {
-                    Socket(LOCALHOST, port)
+                    Socket(getGroupNodes()[getNumberNode(port) - 1], port)
                 }
                 val pw = PrintWriter(groupSocket.getOutputStream(), true)
                 pw.println(BlockGSON.gson.toJson(msg))
